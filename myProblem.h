@@ -11,7 +11,10 @@
 // numElements, maxPlanetSA, answerSize all needs to be defined before calling the planet builders
 struct solarSystem{
     int numElements, maxPlanetSA, answerSize;
-    std::vector<std::string> planets;
+    std::string ans;
+    std::vector<std::string> planets {};
+
+    static void testSolarSystem();
 };
 
 

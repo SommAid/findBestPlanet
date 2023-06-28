@@ -1,8 +1,10 @@
 //
 // Created by Aidan Sommer on 6/26/23.
 //
-
 #include "myProblem.h"
+static void print(solarSystem& mySolarSystem);
+template <typename T>
+static void print(std::vector<T> a);
 static std::string ALL_ELEMENTS[118] { "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"};
 static std::string REQUIRED_ELEMENTS[6] { "H", "C", "N", "O", "P", "Ca" };
 static std::string NON_REQUIRED_ELEMENTS[112] { "He", "Li", "Be", "B", "F", "Ne", "Na", "Mg", "Al", "Si", "S", "Cl", "Ar", "K", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og" }
@@ -20,6 +22,12 @@ static bool isIn(std::vector<int>& positions, int curr)
     return false;
 }
 
+static int uniqueRand(std::vector<int>& positions, int curr, int min = 0, int max = 118)
+{
+    while(isIn(positions, curr))
+        curr = rand() % max + min;
+    return curr;
+}
 
 // Modifies a vector positions to get
 static void positionRequiredElements(std::vector<int>& positions, int numElements, int numRequiredElements = 6)
@@ -27,7 +35,7 @@ static void positionRequiredElements(std::vector<int>& positions, int numElement
     int copy;
     for(int j = 0; j < numRequiredElements; j++)
     {
-        positions.push_back(rand()% numElements);
+        positions.push_back(uniqueRand(positions, rand()% numElements, 0, numElements));
     }
 }
 
@@ -57,8 +65,8 @@ static void planetWrongSize(solarSystem& mySolarSystem) {
                 element = rand() % (6 - insertedCorrectElement);
                 planet += REQUIRED_ELEMENTS[element];
                 copy = REQUIRED_ELEMENTS[element];
-                REQUIRED_ELEMENTS[element] = REQUIRED_ELEMENTS[6 - insertedCorrectElement];
-                REQUIRED_ELEMENTS[6 - insertedCorrectElement] = copy;
+                REQUIRED_ELEMENTS[element] = REQUIRED_ELEMENTS[6 - insertedCorrectElement - 1];
+                REQUIRED_ELEMENTS[6 - insertedCorrectElement - 1] = copy;
                 insertedCorrectElement++;
             }
             else
@@ -66,8 +74,8 @@ static void planetWrongSize(solarSystem& mySolarSystem) {
                 element = rand() % (112 - insertedNonRequired);
                 planet += NON_REQUIRED_ELEMENTS[element];
                 copy = NON_REQUIRED_ELEMENTS[element];
-                NON_REQUIRED_ELEMENTS[element] = NON_REQUIRED_ELEMENTS[112 - insertedNonRequired];
-                NON_REQUIRED_ELEMENTS[112 - insertedNonRequired] = copy;
+                NON_REQUIRED_ELEMENTS[element] = NON_REQUIRED_ELEMENTS[112 - insertedNonRequired - 1];
+                NON_REQUIRED_ELEMENTS[112 - insertedNonRequired - 1] = copy;
                 insertedNonRequired++;
             }
         }
@@ -79,8 +87,8 @@ static void planetWrongSize(solarSystem& mySolarSystem) {
             element = rand() % (118 - i);
             planet += ALL_ELEMENTS[element];
             copy = ALL_ELEMENTS[element];
-            ALL_ELEMENTS[element] = ALL_ELEMENTS[118 - i];
-            ALL_ELEMENTS[118 - i] = copy;
+            ALL_ELEMENTS[element] = ALL_ELEMENTS[118 - i - 1];
+            ALL_ELEMENTS[118 - i - 1] = copy;
         }
     }
     planet += "_" + std::to_string(planetSize);
@@ -94,7 +102,12 @@ DONE:
 Creates a planet with not enough of the much-needed human elements
 */
 static void planetWrongElements(solarSystem& mySolarSystem) {
-    int contain_required_elements = rand()%6, insertedCorrectElement = 0, insertedNonRequired = 0, planetSize, element;
+    int insertedCorrectElement = 0, insertedNonRequired = 0, planetSize, element, contain_required_elements;
+
+    if(mySolarSystem.numElements > 112)
+        contain_required_elements = (mySolarSystem.numElements - 112);
+    else
+        contain_required_elements = rand()%6;
     std::string planet = "", copy;
     std::vector<int> posNeededElements;
 
@@ -108,16 +121,16 @@ static void planetWrongElements(solarSystem& mySolarSystem) {
             element = rand() % (6 - insertedCorrectElement);
             planet += REQUIRED_ELEMENTS[element];
             copy = REQUIRED_ELEMENTS[element];
-            REQUIRED_ELEMENTS[element] = REQUIRED_ELEMENTS[6 - insertedCorrectElement];
-            REQUIRED_ELEMENTS[6 - insertedCorrectElement] = copy;
+            REQUIRED_ELEMENTS[element] = REQUIRED_ELEMENTS[6 - insertedCorrectElement - 1];
+            REQUIRED_ELEMENTS[6 - insertedCorrectElement - 1] = copy;
             insertedCorrectElement++;
         }
         else {
             element = rand() % (112 - insertedNonRequired);
             planet += NON_REQUIRED_ELEMENTS[element];
             copy = NON_REQUIRED_ELEMENTS[element];
-            NON_REQUIRED_ELEMENTS[element] = NON_REQUIRED_ELEMENTS[112 - insertedNonRequired];
-            NON_REQUIRED_ELEMENTS[112 - insertedNonRequired] = copy;
+            NON_REQUIRED_ELEMENTS[element] = NON_REQUIRED_ELEMENTS[112 - insertedNonRequired - 1];
+            NON_REQUIRED_ELEMENTS[112 - insertedNonRequired - 1] = copy;
             insertedNonRequired++;
         }
     }
@@ -135,7 +148,7 @@ in the random elements list
 DONE:
 This function should be completed and will create a complete planet
 */
-static std::string answerBuilder(solarSystem& mySolarSystem) {
+static void answerBuilder(solarSystem& mySolarSystem) {
     int insertedCorrectElement = 0, insertedNonRequired = 0, planetSize, element;
     std::string planet = "", copy;
     std::vector<int> posNeededElements;
@@ -150,22 +163,22 @@ static std::string answerBuilder(solarSystem& mySolarSystem) {
             element = rand() % (6 - insertedCorrectElement);
             planet += REQUIRED_ELEMENTS[element];
             copy = REQUIRED_ELEMENTS[element];
-            REQUIRED_ELEMENTS[element] = REQUIRED_ELEMENTS[6 - insertedCorrectElement];
-            REQUIRED_ELEMENTS[6 - insertedCorrectElement] = copy;
+            REQUIRED_ELEMENTS[element] = REQUIRED_ELEMENTS[6 - insertedCorrectElement - 1];
+            REQUIRED_ELEMENTS[6 - insertedCorrectElement - 1] = copy;
             insertedCorrectElement++;
         }
         else {
             element = rand() % (112 - insertedNonRequired);
             planet += NON_REQUIRED_ELEMENTS[element];
             copy = NON_REQUIRED_ELEMENTS[element];
-            NON_REQUIRED_ELEMENTS[element] = NON_REQUIRED_ELEMENTS[112 - insertedNonRequired];
-            NON_REQUIRED_ELEMENTS[112 - insertedNonRequired] = copy;
+            NON_REQUIRED_ELEMENTS[element] = NON_REQUIRED_ELEMENTS[112 - insertedNonRequired - 1];
+            NON_REQUIRED_ELEMENTS[112 - insertedNonRequired - 1] = copy;
             insertedNonRequired++;
         }
     }
     planet += "_" + std::to_string(planetSize);
     mySolarSystem.planets.push_back(planet);
-
+    mySolarSystem.ans = planet;
 }
 
 static void easySolarSystem(solarSystem& mySolarSystem)
@@ -219,13 +232,26 @@ static void hardSolarSystem(solarSystem& mySolarSystem)
 
 
 // use this function for testing before posting, thanks!
-static void testSolarSystem(solarSystem& mySolarSystem) {
-
+void solarSystem::testSolarSystem() {
+    std::cout << "___START TESTING___\n";
+    for(int j = 0; j < 100; j++) {
+        solarSystem mySolarSystem = solarSystem{};
+        hardSolarSystem(mySolarSystem);
+        std::cout << "Creating hard solar with : " << mySolarSystem.planets.size() << " num planets NUM_TIMES::" << j+1 << "\n";
+    }
+    std::cout << "___FINISH TESTING___\n";
 }
 
-static void print(std::vector<std::string> solarSystem) {
+static void print(solarSystem& mySolarSystem) {
     int pos = 0;
-    for (std::string iter : solarSystem)
+    for (const std::string& iter : mySolarSystem.planets)
+        std::cout << pos++ << " : " << iter << "\n";
+    std::cout << "ANSWER::" << mySolarSystem.ans << "\n";
+}
+
+template <typename T>
+static void print(std::vector<T> a) {
+    int pos = 0;
+    for (const auto& iter : a)
         std::cout << pos++ << " : " << iter << "\n";
 }
-
