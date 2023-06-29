@@ -7,14 +7,16 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <string>
 
 // numElements, maxPlanetSA, answerSize all needs to be defined before calling the planet builders
 struct solarSystem{
-    int numElements, maxPlanetSA, answerSize;
+    int numElements, maxPlanetSA, answerSize, answerPos;
     std::string ans;
     std::vector<std::string> planets {};
 
-    static void testSolarSystem();
+    static void testSolarSystem(solarSystem& mySolarSystem);
 };
 
 

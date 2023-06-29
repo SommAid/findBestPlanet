@@ -13,18 +13,9 @@ static std::string NON_REQUIRED_ELEMENTS[112] { "He", "Li", "Be", "B", "F", "Ne"
 // solarSystemBuilder.cpp : This file contains the 'main' function. Program
 // execution begins and ends there.
 
-// Determines if a number `curr` isIn positions
-static bool isIn(std::vector<int>& positions, int curr)
-{
-    for (const int &i: positions)
-        if (i == curr)
-            return true;
-    return false;
-}
-
 static int uniqueRand(std::vector<int>& positions, int curr, int min = 0, int max = 118)
 {
-    while(isIn(positions, curr))
+    while(std::find(positions.begin(), positions.end(), curr) < positions.end())
         curr = rand() % max + min;
     return curr;
 }
@@ -32,7 +23,6 @@ static int uniqueRand(std::vector<int>& positions, int curr, int min = 0, int ma
 // Modifies a vector positions to get
 static void positionRequiredElements(std::vector<int>& positions, int numElements, int numRequiredElements = 6)
 {
-    int copy;
     for(int j = 0; j < numRequiredElements; j++)
     {
         positions.push_back(uniqueRand(positions, rand()% numElements, 0, numElements));
@@ -60,7 +50,7 @@ static void planetWrongSize(solarSystem& mySolarSystem) {
         positionRequiredElements(posNeededElements, mySolarSystem.numElements);
         for(int i = 0; i < mySolarSystem.numElements; i++)
         {
-            if(isIn(posNeededElements, i))
+            if(std::find(posNeededElements.begin(), posNeededElements.end(), i) < posNeededElements.end())
             {
                 element = rand() % (6 - insertedCorrectElement);
                 planet += REQUIRED_ELEMENTS[element];
@@ -117,7 +107,7 @@ static void planetWrongElements(solarSystem& mySolarSystem) {
     // creates a planet with either not all the correct elements
     positionRequiredElements(posNeededElements, mySolarSystem.numElements,contain_required_elements);
     for(int i = 0; i < mySolarSystem.numElements; i++) {
-        if (isIn(posNeededElements, i)) {
+        if (std::find(posNeededElements.begin(), posNeededElements.end(), i) < posNeededElements.end()) {
             element = rand() % (6 - insertedCorrectElement);
             planet += REQUIRED_ELEMENTS[element];
             copy = REQUIRED_ELEMENTS[element];
@@ -159,7 +149,7 @@ static void answerBuilder(solarSystem& mySolarSystem) {
     // creates a planet with either not all the correct elements
     positionRequiredElements(posNeededElements, mySolarSystem.numElements);
     for(int i = 0; i < mySolarSystem.numElements; i++) {
-        if (isIn(posNeededElements, i)) {
+        if (std::find(posNeededElements.begin(), posNeededElements.end(), i) < posNeededElements.end()) {
             element = rand() % (6 - insertedCorrectElement);
             planet += REQUIRED_ELEMENTS[element];
             copy = REQUIRED_ELEMENTS[element];
@@ -183,7 +173,7 @@ static void answerBuilder(solarSystem& mySolarSystem) {
 
 static void easySolarSystem(solarSystem& mySolarSystem)
 {
-    int numPlanets = rand()%300+150, answerPos = rand()%numPlanets;
+    int numPlanets = rand()%200+150, answerPos = rand()%numPlanets;
     mySolarSystem.numElements = rand()%50+10;
     mySolarSystem.maxPlanetSA = 1000;
     mySolarSystem.answerSize = rand()%500+501;
@@ -199,7 +189,7 @@ static void easySolarSystem(solarSystem& mySolarSystem)
 }
 static void mediumSolarSystem(solarSystem& mySolarSystem)
 {
-    int numPlanets = rand()%500+450,answerPos = rand()%numPlanets;
+    int numPlanets = rand()%500+400,answerPos = rand()%numPlanets;
     mySolarSystem.numElements = rand()%50+50;
     mySolarSystem.maxPlanetSA = 10000;
     mySolarSystem.answerSize = rand()%5000+5001;
@@ -215,7 +205,8 @@ static void mediumSolarSystem(solarSystem& mySolarSystem)
 }
 static void hardSolarSystem(solarSystem& mySolarSystem)
 {
-    int numPlanets = rand()%1000+900, answerPos = rand()%numPlanets;
+    int numPlanets = rand()%1000+800, answerPos = rand()%numPlanets;
+    mySolarSystem.answerPos = answerPos;
     mySolarSystem.numElements = rand()%18+100;
     mySolarSystem.maxPlanetSA = 100000;
     mySolarSystem.answerSize = rand()%50000+50001;
@@ -230,16 +221,9 @@ static void hardSolarSystem(solarSystem& mySolarSystem)
     }
 }
 
-
 // use this function for testing before posting, thanks!
-void solarSystem::testSolarSystem() {
-    std::cout << "___START TESTING___\n";
-    for(int j = 0; j < 100; j++) {
-        solarSystem mySolarSystem = solarSystem{};
-        hardSolarSystem(mySolarSystem);
-        std::cout << "Creating hard solar with : " << mySolarSystem.planets.size() << " num planets NUM_TIMES::" << j+1 << "\n";
-    }
-    std::cout << "___FINISH TESTING___\n";
+void solarSystem::testSolarSystem(solarSystem& mySolarSystem) {
+    hardSolarSystem(mySolarSystem);
 }
 
 static void print(solarSystem& mySolarSystem) {
