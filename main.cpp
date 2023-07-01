@@ -3,8 +3,8 @@
 
 static std::vector<std::string> ELEMENTS { "H", "C", "N", "O", "P", "Ca" };
 
-template <typename T>
-static void print(std::vector<T> a);
+static void print(std::vector<std::string> a);
+static void print(std::vector<std::pair<std::string, int>> a);
 
 int getSizePlanet(const std::string& a)
 {
@@ -28,8 +28,6 @@ bool containsReq(const std::string& planet)
     std::string foundElements = "";
     for(int j = 0; j < planet.size()-1; j++)
     {
-        if(j+1 >= planet.size())
-            std::cout << "Found the error\n";
         curr = planet.substr(j, 2);
         if(isCapital(curr[0]) && isCapital(curr[1])) {
             if (std::find_if(ELEMENTS.cbegin(), ELEMENTS.cend(),
@@ -38,7 +36,6 @@ bool containsReq(const std::string& planet)
                 foundElements += curr[0];
                 count++;
             }
-
         }
         else if(isCapital(curr[0]) && !isCapital(curr[1])) {
                 if (std::find_if(ELEMENTS.cbegin(), ELEMENTS.cend(),
@@ -49,21 +46,21 @@ bool containsReq(const std::string& planet)
                 }
             }
     }
-    //std::cout << "End Check for requirements\n";
-    std::cout << foundElements << "::" << planet << "\n";
+    // std::cout << "End Check for requirements\n";
+    // std::cout << foundElements << "::" << planet << "\n";
     return count >= 6;
 }
 
-std::string bestPlanet(const std::vector<std::string>& planets, int liveableSize)
+std::string bestPlanet(const std::vector<std::string>& planets, int liveableSize, std::vector<std::pair<std::string, int>>& possible)
 {
-    //std::cout << "finding best planet\n";
+    // std::cout << "finding best planet\n";
     int curr_size;
     std::string bestPlanet;
-    std::vector<std::pair<std::string, int>> possible;
+    //std::vector<std::pair<std::string, int>> possible;
     for(const std::string& iter : planets)
     {
         curr_size = getSizePlanet(iter);
-        if(curr_size <= liveableSize)
+        if (curr_size <= liveableSize)
             possible.emplace_back(iter, curr_size);
     }
     // now we want to return the largest planet with all required elements
@@ -79,22 +76,40 @@ std::string bestPlanet(const std::vector<std::string>& planets, int liveableSize
 
 int main() {
     srand(time(0));
-    solarSystem mySolarSystem;
-    solarSystem::testSolarSystem(mySolarSystem);
-    //print(mySolarSystem.planets);
-    std::cout << "Answer Position : " << mySolarSystem.answerPos << "\nLargest Size : " << mySolarSystem.maxPlanetSA << "\nnumPlanets : " << mySolarSystem.planets.size() << "\n";
-    std::cout << "REAL ANSWER : " << mySolarSystem.ans << "\n";
-    //std::cout << "Number of planets : " << mySolarSystem.planets.size() << "\n";
-    std::string myAnswer = bestPlanet(mySolarSystem.planets, mySolarSystem.maxPlanetSA);
-    std::cout << "My Answer : " << myAnswer << "\n";
-    std::cout << "Are we correct : " << (myAnswer == mySolarSystem.ans) << "\n";
+    std::string myAnswer;
+    bool error = false;
+    for (int j = 0; j < 100 && !error; j++)
+    {
+        std::vector<std::pair<std::string, int>> possible;
+        solarSystem mySolarSystem;
+        solarSystem::testSolarSystem(mySolarSystem);
+        myAnswer = bestPlanet(mySolarSystem.planets, mySolarSystem.maxPlanetSA, possible);
+        if (myAnswer != mySolarSystem.ans)
+        {
+            std::cout << "An Error Occured\n";
+            std::cout << "Number of tests passed : " << (j+1) << "\n";
+            print(possible);
+            std::cout << myAnswer << "\n ***** \n";
+            std::cout << mySolarSystem.ans << "\n";
+            error = true;
+        }
+    }
+    if (!error)
+    {
+        std::cout << "You passed all the tests\n";
+    }
 
     return 0;
 }
 
-template <typename T>
-static void print(std::vector<T> a) {
+static void print(std::vector<std::string> a) {
     int pos = 0;
     for (const auto& iter : a)
         std::cout << pos++ << " : " << iter << "\n";
+}
+
+static void print(std::vector<std::pair<std::string, int>> a) {
+    int pos = 0;
+    for (const auto& iter : a)
+        std::cout << pos++ << " : " << iter.second << "\n";
 }
