@@ -24,12 +24,13 @@ bool isCapital(const char& let)
 bool containsReq(const std::string& planet)
 {
     //std::cout << "Checking if planet meets requirements\n";
-    std::string curr; int count = 0;
+    std::string curr;
+    int count = 0, len = planet.size();
     std::string foundElements = "";
-    for(int j = 0; j < planet.size()-1; j++)
+    for(int j = 0; j < len-1; j++)
     {
         curr = planet.substr(j, 2);
-        if(isCapital(curr[0]) && isCapital(curr[1])) {
+        if(isCapital(curr[0]) && !(curr[1] >= 'a' && curr[1] <= 'z')) {
             if (std::find_if(ELEMENTS.cbegin(), ELEMENTS.cend(),
                              [curr](auto a) {return a == std::string(1, curr[0]); }) < ELEMENTS.end())
             {
@@ -38,13 +39,14 @@ bool containsReq(const std::string& planet)
             }
         }
         else if(isCapital(curr[0]) && !isCapital(curr[1])) {
-                if (std::find_if(ELEMENTS.cbegin(), ELEMENTS.cend(),
-                                 [curr](auto a) { return a == curr; }) < ELEMENTS.cend())
-                {
-                    foundElements += curr[0];
-                    count++;
-                }
+            if (std::find_if(ELEMENTS.cbegin(), ELEMENTS.cend(),
+                                [curr](auto a) { return a == curr; }) < ELEMENTS.cend())
+            {
+                foundElements += curr[0];
+                count++;
             }
+            j++;
+        }
     }
     // std::cout << "End Check for requirements\n";
     // std::cout << foundElements << "::" << planet << "\n";
@@ -91,6 +93,7 @@ int main() {
             print(possible);
             std::cout << myAnswer << "\n ***** \n";
             std::cout << mySolarSystem.ans << "\n";
+            containsReq(mySolarSystem.ans);
             error = true;
         }
     }

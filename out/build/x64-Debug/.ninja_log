@@ -1,0 +1,8 @@
+# ninja log v5
+4	578	7099414254106272	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	6c91f7ec6a559028
+1	590	7099414254226691	CMakeFiles/bestPlanet.dir/main.cpp.obj	a1504b74019ed5f9
+590	799	7099414256249892	bestPlanet.exe	8196bd672198458d
+0	310	7099415097260164	CMakeFiles/bestPlanet.dir/main.cpp.obj	a1504b74019ed5f9
+311	390	7099415097917717	bestPlanet.exe	8196bd672198458d
+0	342	7099419263311282	CMakeFiles/bestPlanet.dir/main.cpp.obj	a1504b74019ed5f9
+342	417	7099419263933446	bestPlanet.exe	8196bd672198458d

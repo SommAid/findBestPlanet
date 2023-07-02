@@ -16,7 +16,7 @@ struct solarSystem{
     std::string ans;
     std::vector<std::string> planets {};
 
-    static void testSolarSystem(solarSystem& mySolarSystem);
+   static void testSolarSystem(solarSystem& mySolarSystem);
 };
 
 

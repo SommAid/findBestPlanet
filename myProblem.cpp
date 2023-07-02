@@ -7,16 +7,14 @@ template <typename T>
 static void print(std::vector<T> a);
 static std::string ALL_ELEMENTS[118] { "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"};
 static std::string REQUIRED_ELEMENTS[6] { "H", "C", "N", "O", "P", "Ca" };
-static std::string NON_REQUIRED_ELEMENTS[112] { "He", "Li", "Be", "B", "F", "Ne", "Na", "Mg", "Al", "Si", "S", "Cl", "Ar", "K", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og" }
-;
+static std::string NON_REQUIRED_ELEMENTS[112]{ "He", "Li", "Be", "B", "F", "Ne", "Na", "Mg", "Al", "Si", "S", "Cl", "Ar", "K", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og" };
 
-// solarSystemBuilder.cpp : This file contains the 'main' function. Program
 // execution begins and ends there.
 
 static int uniqueRand(std::vector<int>& positions, int curr, int min = 0, int max = 118)
 {
     while(std::find(positions.begin(), positions.end(), curr) < positions.end())
-        curr = rand() % max + min;
+        curr = rand() % (max - min) + min;
     return curr;
 }
 
@@ -27,6 +25,28 @@ static void positionRequiredElements(std::vector<int>& positions, int numElement
     {
         positions.push_back(uniqueRand(positions, rand()% numElements, 0, numElements));
     }
+}
+
+// Creates a solar system were all planets are larger than what can sustain human life
+static void planetWrongSizeLarge(solarSystem& mySolarSystem)
+{
+    int contain_required_elements = rand() % 2, insertedCorrectElement = 0, insertedNonRequired = 0, element, planetSize;
+    std::string planet = "", copy;
+    std::vector<int> posNeededElements;
+    // creates a planet that is too large
+    planetSize = rand() % mySolarSystem.maxPlanetSA + mySolarSystem.maxPlanetSA + 1;
+
+    // creates a planet with random elements
+    for (int i = 0; i < mySolarSystem.numElements; i++)
+    {
+        element = rand() % (118 - i);
+        planet += ALL_ELEMENTS[element];
+        copy = ALL_ELEMENTS[element];
+        ALL_ELEMENTS[element] = ALL_ELEMENTS[118 - i - 1];
+        ALL_ELEMENTS[118 - i - 1] = copy;
+    }
+    planet += "_" + std::to_string(planetSize);
+    mySolarSystem.planets.push_back(planet);
 }
 
 /*
@@ -203,6 +223,33 @@ static void mediumSolarSystem(solarSystem& mySolarSystem)
             planetWrongElements(mySolarSystem);
     }
 }
+
+static void largeSolarSystem(solarSystem& mySolarSystem)
+{
+    int numPlanets = rand() % 500 + 400, answerPos = rand() % numPlanets;
+    mySolarSystem.numElements = rand() % 50 + 50;
+    mySolarSystem.maxPlanetSA = 10000;
+    mySolarSystem.answerSize = rand() % 5000 + 5001;
+    mySolarSystem.ans = "";
+    for (int j = 0; j < numPlanets; j++)
+    {
+        planetWrongSizeLarge(mySolarSystem);
+    }
+}
+
+static void lackingElements(solarSystem& mySolarSystem)
+{
+    int numPlanets = rand() % 500 + 400, answerPos = rand() % numPlanets;
+    mySolarSystem.numElements = rand() % 50 + 50;
+    mySolarSystem.maxPlanetSA = 10000;
+    mySolarSystem.answerSize = rand() % 5000 + 5001;
+    mySolarSystem.ans = "";
+    for (int j = 0; j < numPlanets; j++)
+    {
+        planetWrongElements(mySolarSystem);
+    }
+}
+
 static void hardSolarSystem(solarSystem& mySolarSystem)
 {
     int numPlanets = rand()%1000+800, answerPos = rand()%numPlanets;
