@@ -1,27 +1,4 @@
 # ninja log v5
-1	474	7099428084784863	CMakeFiles/bestPlanet.dir/main.cpp.obj	3b456f5654e70814
-0	544	7099428738051057	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
-545	607	7099428738713353	bestPlanet.exe	b2cb12d4d73a029c
-0	536	7099618152213430	CMakeFiles/bestPlanet.dir/main.cpp.obj	3b456f5654e70814
-3	637	7099618153216905	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
-637	704	7099618153910927	bestPlanet.exe	b2cb12d4d73a029c
-0	448	7099618717754039	CMakeFiles/bestPlanet.dir/main.cpp.obj	3b456f5654e70814
-449	512	7099618718411313	bestPlanet.exe	b2cb12d4d73a029c
 0	452	7099618839463305	CMakeFiles/bestPlanet.dir/main.cpp.obj	3b456f5654e70814
-452	516	7099618840125251	bestPlanet.exe	b2cb12d4d73a029c
-0	631	7099630347679198	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
-632	699	7099630348382363	bestPlanet.exe	b2cb12d4d73a029c
-1	641	7099694156017698	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
-642	709	7099694156729953	bestPlanet.exe	b2cb12d4d73a029c
-1	558	7100123568823376	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
-559	646	7100123569723027	bestPlanet.exe	b2cb12d4d73a029c
-0	536	7100123699655343	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
-536	600	7100123700327678	bestPlanet.exe	b2cb12d4d73a029c
-0	660	7100129268029610	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
-661	723	7100129268681220	bestPlanet.exe	b2cb12d4d73a029c
-0	639	7100129457030316	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
-639	705	7100129457718519	bestPlanet.exe	b2cb12d4d73a029c
-0	543	7100130291127814	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
-543	608	7100130291810183	bestPlanet.exe	b2cb12d4d73a029c
 1	636	7100130584687262	CMakeFiles/bestPlanet.dir/myProblem.cpp.obj	411bc7d68746dfa4
 637	701	7100130585356677	bestPlanet.exe	b2cb12d4d73a029c
