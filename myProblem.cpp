@@ -122,7 +122,7 @@ static void planetWrongElements(solarSystem& mySolarSystem) {
     std::vector<int> posNeededElements;
 
     // creates a planet that is the same size as or better than the actual planet
-    planetSize = rand()%(mySolarSystem.maxPlanetSA - mySolarSystem.answerSize) + mySolarSystem.answerSize;
+    planetSize = rand()%(mySolarSystem.maxPlanetSA - mySolarSystem.answerSize + 1) + mySolarSystem.answerSize;
 
     // creates a planet with either not all the correct elements
     positionRequiredElements(posNeededElements, mySolarSystem.numElements,contain_required_elements);
@@ -189,6 +189,33 @@ static void answerBuilder(solarSystem& mySolarSystem) {
     planet += "_" + std::to_string(planetSize);
     mySolarSystem.planets.push_back(planet);
     mySolarSystem.ans = planet;
+}
+
+static void tinySolarSystem(solarSystem& mySolarSystem)
+{
+    int numPlanets = rand() % 5 + 10, answerPos = rand() % numPlanets;
+    mySolarSystem.numElements = rand() % 10 + 6;
+    mySolarSystem.maxPlanetSA = 250;
+    mySolarSystem.answerSize = rand() % 125 + 126;
+    for (int j = 0; j < numPlanets; j++)
+    {
+        if (j == answerPos)
+        {
+            std::cout << "mySolarSystem.answerSize : " << mySolarSystem.answerSize << "\n";
+            std::cout << "Creating the answer\n";
+            answerBuilder(mySolarSystem);
+        }
+        else if (j % 2 == 0)
+        {
+            std::cout << "Creating the wrong size of planet\n";
+            planetWrongSize(mySolarSystem);
+        }
+        else
+        {
+            std::cout << "Creating the wrong num of elements\n";
+            planetWrongElements(mySolarSystem);
+        }
+    }
 }
 
 static void easySolarSystem(solarSystem& mySolarSystem)
@@ -270,7 +297,7 @@ static void hardSolarSystem(solarSystem& mySolarSystem)
 
 // use this function for testing before posting, thanks!
 void solarSystem::testSolarSystem(solarSystem& mySolarSystem) {
-    hardSolarSystem(mySolarSystem);
+    tinySolarSystem(mySolarSystem);
 }
 
 static void print(solarSystem& mySolarSystem) {
